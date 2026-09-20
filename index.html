@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>YOLUYORU 资本 · AI驱动的创投生态平台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent;}
+
+/* ─── TOKENS ─── */
+:root{
+  --ink:     #0A0806;
+  --ink2:    #13100C;
+  --ink3:    #1C1710;
+  --gold:    #C8883C;
+  --gold2:   #E8A84A;
+  --gold-d:  rgba(200,136,60,0.14);
+  --gold-l:  rgba(200,136,60,0.28);
+  --cream:   #FAF7F2;
+  --cream2:  #EDE4D4;
+  --muted:   #8A7D6A;
+  --muted2:  #6A5E4E;
+  --line:    rgba(255,255,255,0.07);
+  --serif:   'Noto Serif SC','Cormorant Garamond',serif;
+  --sans:    'DM Sans',sans-serif;
+  --mono:    'DM Mono',monospace;
+  --r:       4px;
+}
+
+body{
+  background:var(--ink);
+  color:var(--cream);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* Noise */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.35;
+}
+
+/* ─── LANG ─── */
+[data-en]{display:none;}
+body.en [data-zh]{display:none;}
+body.en [data-en]{display:block;}
+body.en span[data-en]{display:inline;}
+body.en span[data-zh]{display:none;}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:56px;padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(10,8,6,0.88);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);
+  transition:background .3s;
+}
+.nav-logo{
+  display:flex;align-items:center;gap:9px;
+  text-decoration:none;
+}
+.nav-mark{
+  width:30px;height:30px;border-radius:5px;
+  border:1.5px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:11px;font-weight:500;color:var(--gold);
+  letter-spacing:0;flex-shrink:0;
+}
+.nav-brand{
+  font-family:var(--serif);font-size:15px;font-weight:600;
+  color:var(--gold);letter-spacing:0.04em;
+}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.lang-btn{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.1em;
+  color:var(--gold);background:var(--gold-d);
+  border:1px solid var(--gold-l);padding:5px 12px;
+  border-radius:var(--r);cursor:pointer;
+}
+.menu-btn{
+  width:36px;height:36px;background:none;border:none;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:5px;cursor:pointer;padding:0;
+}
+.menu-btn span{
+  display:block;width:22px;height:1.5px;
+  background:var(--cream2);border-radius:2px;
+  transition:all .25s;
+}
+.menu-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.menu-btn.open span:nth-child(2){opacity:0;}
+.menu-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+/* Drawer */
+.drawer{
+  position:fixed;top:56px;left:0;right:0;bottom:0;
+  background:rgba(10,8,6,0.97);backdrop-filter:blur(20px);
+  z-index:150;
+  display:flex;flex-direction:column;
+  padding:32px 28px 40px;
+  transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.drawer.open{transform:translateX(0);}
+.drawer nav-links-m{list-style:none;}
+.drawer a{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 0;
+  font-family:var(--serif);font-size:22px;font-weight:500;
+  color:var(--cream2);text-decoration:none;
+  border-bottom:1px solid var(--line);
+  transition:color .2s;
+}
+.drawer a:last-child{border-bottom:none;}
+.drawer a:hover,.drawer a:active{color:var(--gold);}
+.drawer a .arrow{font-size:16px;color:var(--gold);opacity:0.6;}
+.drawer-cta{
+  margin-top:auto;
+}
+.drawer-cta a{
+  display:block;text-align:center;
+  background:var(--gold);color:var(--ink);
+  font-family:var(--mono);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;
+  text-decoration:none;padding:14px;border-radius:var(--r);
+  margin-bottom:10px;
+}
+.drawer-social{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;
+}
+.drawer-social a{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--muted);border:1px solid rgba(255,255,255,.08);
+  padding:7px 12px;border-radius:var(--r);text-decoration:none;
+  display:inline-flex;align-items:center;gap:5px;
+  border-bottom:none;padding-bottom:7px;
+}
+
+/* ─── SECTIONS BASE ─── */
+section{position:relative;z-index:1;}
+.sec-label{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.22em;
+  color:var(--gold);text-transform:uppercase;
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:14px;
+}
+.sec-label::before{content:'';width:20px;height:1px;background:var(--gold);}
+.sec-title{
+  font-family:var(--serif);font-size:clamp(24px,7vw,32px);font-weight:600;
+  color:var(--cream);line-height:1.25;letter-spacing:-0.01em;margin-bottom:6px;
+}
+.sec-sub{
+  font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;
+  color:var(--muted);margin-bottom:20px;letter-spacing:0.02em;
+}
+.sep{
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-l),transparent);
+  margin:0 20px;
+}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100svh;padding:88px 24px 64px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 120% 60% at 80% 20%,rgba(200,136,60,0.08) 0%,transparent 55%),
+    radial-gradient(ellipse 80% 100% at 0% 100%,rgba(200,136,60,0.05) 0%,transparent 50%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
+  background-size:60px 60px;
+  will-change:transform;
+}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.2em;
+  color:var(--gold);text-transform:uppercase;
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:22px;position:relative;z-index:1;
+}
+.hero-eyebrow::before{content:'';width:24px;height:1px;background:var(--gold);}
+.hero-h1{
+  font-family:var(--serif);
+  font-size:clamp(34px,9vw,44px);
+  font-weight:600;line-height:1.2;
+  color:var(--cream);margin-bottom:6px;
+  letter-spacing:-0.01em;position:relative;z-index:1;
+}
+.hero-h1 em{color:var(--gold);font-style:normal;}
+.hero-h1-en{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(18px,5vw,22px);font-weight:300;font-style:italic;
+  color:var(--muted);margin-bottom:22px;letter-spacing:0.02em;
+  position:relative;z-index:1;
+}
+.hero-slogan{
+  font-size:14px;color:var(--cream2);line-height:1.85;
+  margin-bottom:6px;position:relative;z-index:1;
+  opacity:0.85;
+}
+.hero-slogan-en{
+  font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;
+  color:var(--muted);margin-bottom:32px;letter-spacing:0.02em;
+  position:relative;z-index:1;
+}
+.hero-actions{
+  display:flex;gap:10px;flex-wrap:wrap;position:relative;z-index:1;margin-bottom:40px;
+}
+.btn-prim{
+  flex:1;min-width:120px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink);background:var(--gold);
+  border:none;padding:14px 16px;border-radius:var(--r);
+  text-align:center;text-decoration:none;display:block;
+  transition:background .2s;
+}
+.btn-prim:active{background:var(--gold2);}
+.btn-ghost{
+  flex:1;min-width:120px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--muted);background:none;
+  border:1px solid rgba(255,255,255,0.14);padding:14px 16px;border-radius:var(--r);
+  text-align:center;text-decoration:none;display:block;
+  transition:all .2s;
+}
+.btn-ghost:active{border-color:var(--gold-l);color:var(--cream);}
+
+/* Hero stats strip */
+.hero-stats{
+  display:flex;border-top:1px solid var(--line);
+  position:relative;z-index:1;
+}
+.hero-stat{
+  flex:1;padding:16px 0;text-align:center;
+  border-right:1px solid var(--line);
+}
+.hero-stat:last-child{border-right:none;}
+.hero-stat-num{
+  font-family:var(--mono);font-size:20px;font-weight:500;
+  color:var(--gold);display:block;letter-spacing:-0.02em;
+}
+.hero-stat-lbl{
+  font-size:10px;color:var(--muted);
+  display:block;margin-top:2px;letter-spacing:0.04em;
+}
+
+/* ─── ABOUT ─── */
+.about{padding:56px 24px;}
+.about-body{
+  font-size:14px;color:rgba(240,233,220,0.7);line-height:1.95;
+}
+.about-body p{margin-bottom:16px;}
+.about-body p:last-child{margin-bottom:0;}
+.stats-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--line);
+  margin-top:32px;border-radius:var(--r);overflow:hidden;
+}
+.stat-cell{
+  background:var(--ink2);padding:22px 18px;
+}
+.stat-n{
+  font-family:var(--mono);font-size:28px;font-weight:500;
+  color:var(--gold);display:block;letter-spacing:-0.02em;margin-bottom:5px;
+}
+.stat-l{font-size:11px;color:var(--muted);letter-spacing:0.04em;font-family:var(--mono);}
+.stat-le{font-size:10px;color:var(--muted2);font-style:italic;display:block;margin-top:2px;font-family:'Cormorant Garamond',serif;}
+
+/* ─── VALUES ─── */
+.values{padding:56px 24px;background:var(--ink2);}
+.value-list{margin-top:32px;display:flex;flex-direction:column;gap:1px;background:var(--line);border-radius:var(--r);overflow:hidden;}
+.value-item{
+  background:var(--ink2);padding:24px 20px;
+  border-left:2px solid transparent;
+  transition:all .25s;
+  cursor:pointer;
+}
+.value-item.open{border-left-color:var(--gold);background:var(--ink3);}
+.value-header{display:flex;align-items:flex-start;gap:14px;}
+.value-icon-wrap{
+  width:40px;height:40px;border-radius:var(--r);
+  background:var(--gold-d);border:1px solid var(--gold-l);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.value-header-text{flex:1;}
+.value-num{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.16em;
+  color:var(--gold);display:block;margin-bottom:4px;
+}
+.value-name{
+  font-family:var(--serif);font-size:17px;font-weight:600;
+  color:var(--cream);line-height:1.3;
+}
+.value-name-en{
+  font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;
+  color:var(--muted);display:block;margin-top:2px;
+}
+.value-chevron{
+  font-size:16px;color:var(--gold);opacity:0.5;
+  transition:transform .25s;flex-shrink:0;margin-top:2px;
+}
+.value-item.open .value-chevron{transform:rotate(180deg);opacity:1;}
+.value-desc{
+  font-size:13px;color:rgba(240,233,220,0.65);
+  line-height:1.85;margin-top:14px;padding-left:54px;
+  display:none;
+}
+.value-item.open .value-desc{display:block;}
+
+/* ─── TEAM ─── */
+.team{padding:56px 24px;}
+.team-list{display:flex;flex-direction:column;gap:1px;background:var(--line);margin-top:32px;border-radius:var(--r);overflow:hidden;}
+.team-card{
+  background:var(--ink2);padding:22px 20px;
+  position:relative;overflow:hidden;
+}
+.team-card::after{
+  content:'';position:absolute;bottom:0;left:0;
+  width:0;height:2px;background:var(--gold);
+  transition:width .35s;
+}
+.team-card:active::after,.team-card:hover::after{width:100%;}
+.tc-top{display:flex;align-items:flex-start;gap:14px;}
+.tc-ava{
+  width:46px;height:46px;border-radius:var(--r);
+  background:var(--gold-d);border:1px solid var(--gold-l);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:18px;font-weight:600;color:var(--gold);
+  flex-shrink:0;
+}
+.tc-meta{flex:1;}
+.tc-name{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--cream);margin-bottom:3px;}
+.tc-role{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;margin-bottom:8px;display:block;}
+.tc-bg{font-size:12px;color:var(--muted);line-height:1.7;margin-top:10px;}
+.tc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;}
+.tc-tag{
+  font-family:var(--mono);font-size:8px;letter-spacing:0.1em;
+  color:var(--muted);border:1px solid rgba(255,255,255,0.08);
+  padding:3px 8px;border-radius:2px;text-transform:uppercase;
+}
+
+/* ─── APP DOWNLOAD ─── */
+.app-dl{padding:56px 24px;background:var(--ink3);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.app-features{list-style:none;margin:20px 0 28px;display:flex;flex-direction:column;gap:10px;}
+.app-features li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:13px;color:var(--muted);line-height:1.6;
+}
+.app-features li::before{
+  content:'→';color:var(--gold);flex-shrink:0;
+  margin-top:1px;font-family:var(--mono);font-size:11px;
+}
+.qr-row{display:flex;gap:16px;margin-top:4px;}
+.qr-card{
+  flex:1;background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--r);padding:16px 14px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.qr-box{
+  width:90px;height:90px;background:var(--cream);
+  border-radius:var(--r);border:1px solid var(--gold-l);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.qr-lbl{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;text-align:center;}
+.qr-sub{font-size:10px;color:var(--muted2);font-style:italic;font-family:'Cormorant Garamond',serif;text-align:center;}
+
+/* App badges row */
+.app-badge-row{display:flex;flex-direction:column;gap:10px;margin-top:24px;}
+.app-badge{
+  display:flex;align-items:center;gap:12px;
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--r);padding:13px 16px;
+  text-decoration:none;transition:border-color .2s;
+}
+.app-badge:active{border-color:var(--gold-l);}
+.ab-icon{font-size:22px;flex-shrink:0;}
+.ab-text{}
+.ab-sub{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;display:block;}
+.ab-name{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--cream);display:block;margin-top:1px;}
+.ab-arrow{margin-left:auto;font-size:18px;color:var(--gold);opacity:0.6;}
+
+/* ─── CONTACT ─── */
+.contact{padding:56px 24px;}
+.contact-desc{font-size:14px;color:rgba(240,233,220,0.65);line-height:1.9;margin-bottom:28px;}
+.contact-methods{display:flex;flex-direction:column;gap:10px;margin-bottom:32px;}
+.contact-item{
+  display:flex;align-items:center;gap:14px;
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--r);padding:14px 16px;
+  text-decoration:none;transition:border-color .2s;
+}
+.contact-item:active{border-color:var(--gold-l);}
+.ci-icon{
+  width:36px;height:36px;background:var(--gold-d);border:1px solid var(--gold-l);
+  border-radius:var(--r);display:flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;
+}
+.ci-type{font-family:var(--mono);font-size:9px;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:2px;}
+.ci-val{font-size:13px;color:var(--cream2);}
+.ci-arrow{margin-left:auto;font-size:16px;color:var(--gold);opacity:0.4;}
+
+/* Location card */
+.loc-card{
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--r);padding:22px 20px;margin-bottom:24px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;gap:8px;
+}
+.loc-pin{font-size:28px;}
+.loc-city{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;color:var(--gold);text-transform:uppercase;}
+.loc-name{font-size:13px;color:var(--muted);font-style:italic;font-family:'Cormorant Garamond',serif;}
+.loc-url{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--muted2);margin-top:4px;}
+
+/* Social */
+.social-label{font-family:var(--mono);font-size:9px;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.social-row{display:flex;gap:8px;flex-wrap:wrap;}
+.social-btn{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--muted);border:1px solid rgba(255,255,255,0.08);
+  padding:8px 13px;border-radius:var(--r);
+  text-decoration:none;display:inline-flex;align-items:center;gap:5px;
+  transition:all .2s;
+}
+.social-btn:active{color:var(--cream);border-color:var(--gold-l);background:var(--gold-d);}
+
+/* ─── FOOTER ─── */
+footer{
+  padding:28px 24px 40px;border-top:1px solid var(--line);
+  position:relative;z-index:1;
+}
+.footer-brand{font-family:var(--serif);font-size:13px;color:var(--muted);margin-bottom:8px;}
+.footer-brand strong{color:var(--gold);}
+.footer-legal{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--muted2);text-transform:uppercase;line-height:1.8;}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.vis{opacity:1;transform:translateY(0);}
+.reveal:nth-child(2){transition-delay:.08s;}
+.reveal:nth-child(3){transition-delay:.16s;}
+.reveal:nth-child(4){transition-delay:.24s;}
+
+/* ─── BACK TO TOP ─── */
+.btt{
+  position:fixed;bottom:24px;right:20px;z-index:100;
+  width:40px;height:40px;background:var(--gold);
+  border-radius:50%;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;opacity:0;transform:translateY(10px);
+  transition:opacity .3s,transform .3s;pointer-events:none;
+}
+.btt.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+
+/* ─── FLOATING CTA ─── */
+.float-cta{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  padding:12px 20px 28px;
+  background:linear-gradient(transparent,rgba(10,8,6,0.95));
+  display:flex;gap:10px;
+}
+.float-cta a{
+  flex:1;font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+  text-align:center;text-decoration:none;padding:13px;border-radius:var(--r);
+  transition:all .2s;
+}
+.fcta-dl{background:var(--gold);color:var(--ink);}
+.fcta-contact{background:rgba(255,255,255,0.06);color:var(--cream2);border:1px solid rgba(255,255,255,0.1);}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <a class="nav-logo" href="#">
+    <div class="nav-mark">YY</div>
+    <span class="nav-brand" data-zh>YOLUYORU 资本</span>
+    <span class="nav-brand" data-en>YOLUYORU</span>
+  </a>
+  <div class="nav-right">
+    <button class="lang-btn" onclick="toggleLang()">中/EN</button>
+    <button class="menu-btn" id="menuBtn" onclick="toggleMenu()" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── DRAWER ─── -->
+<div class="drawer" id="drawer">
+  <a href="#about" onclick="closeMenu()">
+    <span data-zh>关于我们</span><span data-en>About</span>
+    <span class="arrow">→</span>
+  </a>
+  <a href="#values" onclick="closeMenu()">
+    <span data-zh>平台价值</span><span data-en>Value</span>
+    <span class="arrow">→</span>
+  </a>
+  <a href="#team" onclick="closeMenu()">
+    <span data-zh>核心团队</span><span data-en>Team</span>
+    <span class="arrow">→</span>
+  </a>
+  <a href="#app" onclick="closeMenu()">
+    <span data-zh>下载 App</span><span data-en>Download</span>
+    <span class="arrow">→</span>
+  </a>
+  <a href="#contact" onclick="closeMenu()">
+    <span data-zh>联系我们</span><span data-en>Contact</span>
+    <span class="arrow">→</span>
+  </a>
+  <div class="drawer-cta">
+    <a href="#app" onclick="closeMenu()" data-zh>立即下载 App →</a>
+    <a href="#app" onclick="closeMenu()" data-en style="background:var(--gold);color:var(--ink);display:block;text-align:center;font-family:var(--mono);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;padding:14px;border-radius:var(--r);margin-bottom:10px;">Download App →</a>
+    <div class="drawer-social">
+      <a href="#">📕 小红书</a>
+      <a href="#">▶ 抖音</a>
+      <a href="#" style="border-bottom:none;padding-bottom:7px;">in LinkedIn</a>
+      <a href="#" style="border-bottom:none;padding-bottom:7px;">𝕏 Twitter</a>
+    </div>
+  </div>
+</div>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid" id="heroGrid"></div>
+
+  <div class="hero-eyebrow">
+    <span data-zh>YOLUYORU 资本 · 北京红松创业咨询管理有限公司</span>
+    <span data-en>YOLUYORU Capital · Beijing Hongsong Venture Consulting</span>
+  </div>
+
+  <h1 class="hero-h1" data-zh>让每一个<em>好项目</em><br>都找到对的人</h1>
+  <h1 class="hero-h1" data-en>Every Great Project<br>Finds Its <em>Right Partner</em></h1>
+  <p class="hero-h1-en" data-zh>Every Great Project Finds Its Right Partner</p>
+  <p class="hero-h1-en" data-en>让好项目与对的人相遇</p>
+
+  <p class="hero-slogan" data-zh>VentureAI 是 AI 驱动的创投生态平台，以创业者为核心，精准连接投资人、行业专家与全球华人创投圈。</p>
+  <p class="hero-slogan" data-en>VentureAI is an AI-powered venture ecosystem — founder-centric, precisely connecting entrepreneurs with investors, experts and the global Chinese-speaking VC community.</p>
+  <p class="hero-slogan-en" data-zh>AI-powered · Founder-centric · Global Chinese Venture Ecosystem</p>
+  <p class="hero-slogan-en" data-en>AI驱动 · 创业者为核心 · 全球华人创投生态</p>
+
+  <div class="hero-actions">
+    <a href="#app" class="btn-prim" data-zh>下载 App</a>
+    <a href="#app" class="btn-prim" data-en>Download App</a>
+    <a href="#about" class="btn-ghost" data-zh>了解更多</a>
+    <a href="#about" class="btn-ghost" data-en>Learn More</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num">3,000+</span>
+      <span class="hero-stat-lbl" data-zh>种子用户</span>
+      <span class="hero-stat-lbl" data-en>Seed Users</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">多个</span>
+      <span class="hero-stat-lbl" data-zh>头部客户</span>
+      <span class="hero-stat-lbl" data-en>Clients</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">5</span>
+      <span class="hero-stat-lbl" data-zh>AI 模块</span>
+      <span class="hero-stat-lbl" data-en>AI Modules</span>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ─── ABOUT ─── -->
+<section class="about" id="about">
+  <div class="sec-label" data-zh>关于我们 / ABOUT</div>
+  <div class="sec-label" data-en>ABOUT US / 关于我们</div>
+  <h2 class="sec-title reveal" data-zh>重新定义创投生态<br>的基础设施</h2>
+  <h2 class="sec-title reveal" data-en>Redefining Venture<br>Ecosystem Infrastructure</h2>
+  <p class="sec-sub reveal" data-zh>Redefining Venture Ecosystem Infrastructure</p>
+  <p class="sec-sub reveal" data-en>重新定义创投生态的基础设施</p>
+
+  <div class="about-body reveal">
+    <p data-zh>北京红松创业咨询管理有限公司，商标品牌 YOLUYORU 资本，是一家以 AI 技术为核心驱动力的创投服务机构，专注于打造全球华人创业者的一站式生态平台 VentureAI。</p>
+    <p data-en>Beijing Hongsong Venture Consulting Management Co., Ltd, operating under the YOLUYORU Capital brand, is an AI-driven venture services firm building VentureAI — the all-in-one ecosystem platform for global Chinese-speaking entrepreneurs.</p>
+    <p data-zh>我们相信，每一个优秀的创业者都应该有机会找到合适的资本、资源与伙伴。AI 技术正是解决信息不对称与资源错配的最佳工具。</p>
+    <p data-en>We believe every talented founder deserves access to the right capital, resources and partners. AI technology is the most powerful tool to solve information asymmetry and resource mismatch.</p>
+    <p data-zh>公司总部计划落地新加坡，以国际化视野服务东南亚、香港、北美及中国大陆的华人创投圈，打造真正跨境的创投生态基础设施。</p>
+    <p data-en>Headquartered in Singapore, we serve the global Chinese-speaking venture community across Southeast Asia, Hong Kong, North America, and mainland China.</p>
+  </div>
+
+  <div class="stats-grid reveal">
+    <div class="stat-cell">
+      <span class="stat-n">3,000+</span>
+      <span class="stat-l" data-zh>种子用户</span>
+      <span class="stat-l" data-en>Seed Users</span>
+      <span class="stat-le" data-zh>Seed Users</span>
+      <span class="stat-le" data-en>种子用户</span>
+    </div>
+    <div class="stat-cell">
+      <span class="stat-n">多个</span>
+      <span class="stat-l" data-zh>头部广告客户</span>
+      <span class="stat-l" data-en>Enterprise Clients</span>
+      <span class="stat-le" data-zh>Enterprise Ad Clients</span>
+      <span class="stat-le" data-en>头部广告客户</span>
+    </div>
+    <div class="stat-cell">
+      <span class="stat-n">8人</span>
+      <span class="stat-l" data-zh>核心团队</span>
+      <span class="stat-l" data-en>Core Team</span>
+      <span class="stat-le" data-zh>Core Team Members</span>
+      <span class="stat-le" data-en>核心团队成员</span>
+    </div>
+    <div class="stat-cell">
+      <span class="stat-n">5</span>
+      <span class="stat-l" data-zh>AI核心模块</span>
+      <span class="stat-l" data-en>AI Modules</span>
+      <span class="stat-le" data-zh>AI-Powered Modules</span>
+      <span class="stat-le" data-en>AI核心模块</span>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ─── VALUES ─── -->
+<section class="values" id="values">
+  <div class="sec-label" data-zh>平台价值 / VALUE</div>
+  <div class="sec-label" data-en>PLATFORM VALUE / 平台价值</div>
+  <h2 class="sec-title reveal" data-zh>我们能为你做什么</h2>
+  <h2 class="sec-title reveal" data-en>What We Do For You</h2>
+  <p class="sec-sub reveal" data-zh>What We Do For You</p>
+  <p class="sec-sub reveal" data-en>我们能为你做什么</p>
+
+  <div class="value-list">
+    <div class="value-item open reveal" onclick="toggleValue(this)">
+      <div class="value-header">
+        <div class="value-icon-wrap">🎯</div>
+        <div class="value-header-text">
+          <span class="value-num">01</span>
+          <div class="value-name" data-zh>AI 精准匹配投资人</div>
+          <div class="value-name" data-en>AI Investor Matching</div>
+          <span class="value-name-en" data-zh>AI-Powered Investor Matching</span>
+          <span class="value-name-en" data-en>AI 精准投资人匹配</span>
+        </div>
+        <span class="value-chevron">▾</span>
+      </div>
+      <div class="value-desc">
+        <p data-zh>从数千投资人数据库中，基于赛道、阶段、地区、案例四维匹配，生成专属定制BP，一键触达最匹配的投资人，效率提升10倍。</p>
+        <p data-en>From 500+ investors, our 4D matching engine generates a custom BP and delivers it to your best-fit investors — 10x more efficient than cold outreach.</p>
+      </div>
+    </div>
+    <div class="value-item reveal" onclick="toggleValue(this)">
+      <div class="value-header">
+        <div class="value-icon-wrap">📡</div>
+        <div class="value-header-text">
+          <span class="value-num">02</span>
+          <div class="value-name" data-zh>行业动态实时情报</div>
+          <div class="value-name" data-en>Real-Time Intelligence</div>
+          <span class="value-name-en" data-zh>Real-Time Industry Intelligence</span>
+          <span class="value-name-en" data-en>实时行业情报推送</span>
+        </div>
+        <span class="value-chevron">▾</span>
+      </div>
+      <div class="value-desc">
+        <p data-zh>AI每日从800+来源聚合创投资讯，自动提炼要点，个性化推送。政策、融资事件、竞品动态——你需要知道的，我们帮你过滤。</p>
+        <p data-en>AI aggregates VC news from 800+ sources daily, extracts key insights, and delivers personalized briefings. Policy, funding events, competitor moves — we filter the signal.</p>
+      </div>
+    </div>
+    <div class="value-item reveal" onclick="toggleValue(this)">
+      <div class="value-header">
+        <div class="value-icon-wrap">🤝</div>
+        <div class="value-header-text">
+          <span class="value-num">03</span>
+          <div class="value-name" data-zh>找创业搭子与合伙人</div>
+          <div class="value-name" data-en>Co-Founder Matching</div>
+          <span class="value-name-en" data-zh>Co-Founder & Partner Matching</span>
+          <span class="value-name-en" data-en>创业搭子与合伙人匹配</span>
+        </div>
+        <span class="value-chevron">▾</span>
+      </div>
+      <div class="value-desc">
+        <p data-zh>基于技能互补、行业背景、创业阶段的AI智能匹配，连接适合你的联合创始人、行业专家与技术合伙人。</p>
+        <p data-en>AI-powered matching based on skill complement, industry background and startup stage — connecting you with the right co-founders, domain experts and technical partners.</p>
+      </div>
+    </div>
+    <div class="value-item reveal" onclick="toggleValue(this)">
+      <div class="value-header">
+        <div class="value-icon-wrap">🏢</div>
+        <div class="value-header-text">
+          <span class="value-num">04</span>
+          <div class="value-name" data-zh>企业客户对接</div>
+          <div class="value-name" data-en>Enterprise Customer Matching</div>
+          <span class="value-name-en" data-zh>Enterprise Customer Matching</span>
+          <span class="value-name-en" data-en>企业采购方精准对接</span>
+        </div>
+        <span class="value-chevron">▾</span>
+      </div>
+      <div class="value-desc">
+        <p data-zh>识别目标企业的采购窗口期和关键决策人，AI生成定制化破冰话术，帮助创业者找到第一批大客户。</p>
+        <p data-en>Identify enterprise procurement windows and key decision-makers. AI generates personalized outreach to help founders land their first major enterprise customers.</p>
+      </div>
+    </div>
+    <div class="value-item reveal" onclick="toggleValue(this)">
+      <div class="value-header">
+        <div class="value-icon-wrap">⬡</div>
+        <div class="value-header-text">
+          <span class="value-num">05</span>
+          <div class="value-name" data-zh>Token 经济与合伙人制度</div>
+          <div class="value-name" data-en>Token Economy & Partner Program</div>
+          <span class="value-name-en" data-zh>Token Economy & Partner Program</span>
+          <span class="value-name-en" data-en>Token 经济体系</span>
+        </div>
+        <span class="value-chevron">▾</span>
+      </div>
+      <div class="value-desc">
+        <p data-zh>用户贡献即得Token奖励，积累后可变现。高贡献用户参与股改，成为平台股东。平台最终以SPAC方式上市，与用户共享增长红利。</p>
+        <p data-en>Earn tokens by contributing. Accumulate and redeem for value. High contributors join equity reform — with a future SPAC listing pathway to share in platform growth.</p>
+      </div>
+    </div>
+    <div class="value-item reveal" onclick="toggleValue(this)">
+      <div class="value-header">
+        <div class="value-icon-wrap">🌐</div>
+        <div class="value-header-text">
+          <span class="value-num">06</span>
+          <div class="value-name" data-zh>全球华人创投生态</div>
+          <div class="value-name" data-en>Global Chinese Venture Network</div>
+          <span class="value-name-en" data-zh>Global Chinese Venture Network</span>
+          <span class="value-name-en" data-en>全球华人创投网络</span>
+        </div>
+        <span class="value-chevron">▾</span>
+      </div>
+      <div class="value-desc">
+        <p data-zh>覆盖大陆、香港、东南亚、欧洲、北美硅谷的华人创投圈，中英双语平台，服务全球华人创业者与投资人。</p>
+        <p data-en>Spanning Mainland China, Hong Kong, Southeast Asia and Silicon Valley — a bilingual platform serving the global Chinese-speaking venture community wherever they are.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ─── TEAM ─── -->
+<section class="team" id="team">
+  <div class="sec-label" data-zh>核心团队 / TEAM</div>
+  <div class="sec-label" data-en>CORE TEAM / 核心团队</div>
+  <h2 class="sec-title reveal" data-zh>知名院校背景，跨界互补</h2>
+  <h2 class="sec-title reveal" data-en>Diverse Expertise, Shared Vision</h2>
+  <p class="sec-sub reveal" data-zh>Diverse Expertise · Shared Vision · Industry & Academia & Capital</p>
+  <p class="sec-sub reveal" data-en>知名院校背景 · 跨界互补 · 产学研资媒一体</p>
+
+  <div class="team-list">
+    <div class="team-card reveal">
+      <div class="tc-top">
+        <div class="tc-ava">创</div>
+        <div class="tc-meta">
+          <div class="tc-name" data-zh>联合创始人 ×2</div>
+          <div class="tc-name" data-en>Co-Founders ×2</div>
+          <span class="tc-role" data-zh>连续创业者</span>
+          <span class="tc-role" data-en>Serial Entrepreneurs</span>
+        </div>
+      </div>
+      <p class="tc-bg" data-zh>知名院校背景，具备完整创业经验，深度理解创投生态痛点与机遇。</p>
+      <p class="tc-bg" data-en>Top university alumni with full-cycle startup experience and deep understanding of venture ecosystem pain points.</p>
+      <div class="tc-tags">
+        <span class="tc-tag">Serial Founder</span>
+        <span class="tc-tag">创业者</span>
+      </div>
+    </div>
+
+    <div class="team-card reveal">
+      <div class="tc-top">
+        <div class="tc-ava">投</div>
+        <div class="tc-meta">
+          <div class="tc-name" data-zh>联合创始人 ×1</div>
+          <div class="tc-name" data-en>Co-Founder ×1</div>
+          <span class="tc-role" data-zh>资深投资人</span>
+          <span class="tc-role" data-en>Senior Investor</span>
+        </div>
+      </div>
+      <p class="tc-bg" data-zh>一级市场资深从业者，拥有丰富的项目评估与投资决策经验，深谙投资人需求。</p>
+      <p class="tc-bg" data-en>Seasoned primary market professional with extensive deal evaluation and investment decision-making experience.</p>
+      <div class="tc-tags">
+        <span class="tc-tag">VC</span>
+        <span class="tc-tag">Deal Flow</span>
+      </div>
+    </div>
+
+    <div class="team-card reveal">
+      <div class="tc-top">
+        <div class="tc-ava">研</div>
+        <div class="tc-meta">
+          <div class="tc-name" data-zh>合伙人 ×2</div>
+          <div class="tc-name" data-en>Partners ×2</div>
+          <span class="tc-role" data-zh>成果转化专家</span>
+          <span class="tc-role" data-en>Research Commercialization</span>
+        </div>
+      </div>
+      <p class="tc-bg" data-zh>知名院校研究人员，具备丰富的科研成果转化经验，深度对接高校资源与创业孵化。</p>
+      <p class="tc-bg" data-en>Researchers from top universities with extensive experience in technology transfer and startup incubation.</p>
+      <div class="tc-tags">
+        <span class="tc-tag">Academia</span>
+        <span class="tc-tag">Tech Transfer</span>
+      </div>
+    </div>
+
+    <div class="team-card reveal">
+      <div class="tc-top">
+        <div class="tc-ava">媒</div>
+        <div class="tc-meta">
+          <div class="tc-name" data-zh>合伙人 ×2</div>
+          <div class="tc-name" data-en>Partners ×2</div>
+          <span class="tc-role" data-zh>资深媒体人</span>
+          <span class="tc-role" data-en>Senior Media Professionals</span>
+        </div>
+      </div>
+      <p class="tc-bg" data-zh>拥有深厚的媒体资源与内容运营经验，负责平台内容生态建设与品牌传播。</p>
+      <p class="tc-bg" data-en>Extensive media network and content operations expertise, leading platform content ecosystem and brand communication.</p>
+      <div class="tc-tags">
+        <span class="tc-tag">Media</span>
+        <span class="tc-tag">Content</span>
+      </div>
+    </div>
+
+    <div class="team-card reveal">
+      <div class="tc-top">
+        <div class="tc-ava">法</div>
+        <div class="tc-meta">
+          <div class="tc-name" data-zh>合伙人 ×1</div>
+          <div class="tc-name" data-en>Partner ×1</div>
+          <span class="tc-role" data-zh>资深律师</span>
+          <span class="tc-role" data-en>Senior Legal Counsel</span>
+        </div>
+      </div>
+      <p class="tc-bg" data-zh>专注创投领域法律服务，股权结构设计、融资合规、跨境法律支持，确保平台在新加坡及国际市场的合规运营。</p>
+      <p class="tc-bg" data-en>Specializing in venture law — equity structure, fundraising compliance and cross-border legal support for Singapore and international markets.</p>
+      <div class="tc-tags">
+        <span class="tc-tag">Legal</span>
+        <span class="tc-tag">Compliance</span>
+        <span class="tc-tag">Singapore</span>
+      </div>
+    </div>
+
+    <!-- Summary card -->
+    <div class="team-card reveal" style="background:var(--ink3);border-left:2px solid var(--gold);">
+      <div class="tc-top">
+        <div class="tc-ava" style="font-size:12px;background:rgba(200,136,60,0.2);">4+4</div>
+        <div class="tc-meta">
+          <div class="tc-name" data-zh>4 联创 + 4 合伙人</div>
+          <div class="tc-name" data-en>4 Co-Founders + 4 Partners</div>
+          <span class="tc-role" data-zh>产学研资媒法 全覆盖</span>
+          <span class="tc-role" data-en>Industry · Academia · Capital · Media · Legal</span>
+        </div>
+      </div>
+      <div class="tc-tags" style="margin-top:14px;">
+        <span class="tc-tag">连续创业</span>
+        <span class="tc-tag">投资经验</span>
+        <span class="tc-tag">成果转化</span>
+        <span class="tc-tag">媒体资源</span>
+        <span class="tc-tag">AI技术</span>
+        <span class="tc-tag">院校资源</span>
+        <span class="tc-tag">产业网络</span>
+        <span class="tc-tag">法律背书</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ─── APP DOWNLOAD ─── -->
+<section class="app-dl" id="app">
+  <div class="sec-label" data-zh>下载应用 / DOWNLOAD</div>
+  <div class="sec-label" data-en>DOWNLOAD APP / 下载应用</div>
+  <h2 class="sec-title reveal" data-zh>随时随地，连接创投生态</h2>
+  <h2 class="sec-title reveal" data-en>Connect Anytime, Anywhere</h2>
+  <p class="sec-sub reveal" data-zh>Connect to the Venture Ecosystem, Anywhere</p>
+  <p class="sec-sub reveal" data-en>随时随地，连接创投生态</p>
+
+  <ul class="app-features reveal" data-zh>
+    <li>注册即获 1,000 Token 开户礼包</li>
+    <li>AI智能匹配，3分钟找到最匹配的投资人</li>
+    <li>每日 08:00 推送个性化创投早报</li>
+    <li>中英双语，覆盖全球华人用户</li>
+    <li>新加坡服务器，数据合规安全</li>
+  </ul>
+  <ul class="app-features reveal" data-en>
+    <li>Get 1,000 Tokens as a welcome gift on registration</li>
+    <li>AI smart matching — find your best-fit investors in 3 minutes</li>
+    <li>Personalized VC daily briefing at 08:00 every day</li>
+    <li>Bilingual (Chinese/English), serving global Chinese-speaking users</li>
+    <li>Singapore servers, fully compliant and secure</li>
+  </ul>
+
+  <!-- App store badges -->
+  <div class="app-badge-row reveal">
+    <a class="app-badge" href="#">
+      <span class="ab-icon">🍎</span>
+      <div class="ab-text">
+        <span class="ab-sub" data-zh>在 App Store 下载</span>
+        <span class="ab-sub" data-en>Download on the</span>
+        <span class="ab-name">App Store</span>
+      </div>
+      <span class="ab-arrow">→</span>
+    </a>
+    <a class="app-badge" href="#">
+      <span class="ab-icon">▶</span>
+      <div class="ab-text">
+        <span class="ab-sub" data-zh>在 Google Play 下载</span>
+        <span class="ab-sub" data-en>Get it on</span>
+        <span class="ab-name">Google Play</span>
+      </div>
+      <span class="ab-arrow">→</span>
+    </a>
+    <a class="app-badge" href="#">
+      <span class="ab-icon">📦</span>
+      <div class="ab-text">
+        <span class="ab-sub" data-zh>直接下载安装包</span>
+        <span class="ab-sub" data-en>Direct Download</span>
+        <span class="ab-name">APK / 安装包</span>
+      </div>
+      <span class="ab-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- QR codes -->
+  <div style="margin-top:28px;">
+    <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;margin-bottom:14px;" data-zh>或扫码下载</p>
+    <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;margin-bottom:14px;" data-en>Or scan to download</p>
+    <div class="qr-row">
+      <div class="qr-card reveal">
+        <div class="qr-box">
+          <svg width="82" height="82" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="28" height="28" rx="3" fill="#0A0806"/><rect x="9" y="9" width="20" height="20" rx="2" fill="white"/><rect x="13" y="13" width="12" height="12" rx="1" fill="#0A0806"/>
+            <rect x="67" y="5" width="28" height="28" rx="3" fill="#0A0806"/><rect x="71" y="9" width="20" height="20" rx="2" fill="white"/><rect x="75" y="13" width="12" height="12" rx="1" fill="#0A0806"/>
+            <rect x="5" y="67" width="28" height="28" rx="3" fill="#0A0806"/><rect x="9" y="71" width="20" height="20" rx="2" fill="white"/><rect x="13" y="75" width="12" height="12" rx="1" fill="#0A0806"/>
+            <rect x="40" y="5" width="6" height="6" rx="1" fill="#0A0806"/><rect x="50" y="5" width="6" height="6" rx="1" fill="#0A0806"/><rect x="40" y="15" width="6" height="6" rx="1" fill="#0A0806"/><rect x="55" y="15" width="6" height="6" rx="1" fill="#0A0806"/><rect x="45" y="25" width="10" height="6" rx="1" fill="#0A0806"/>
+            <rect x="5" y="40" width="6" height="6" rx="1" fill="#0A0806"/><rect x="15" y="40" width="10" height="6" rx="1" fill="#0A0806"/><rect x="5" y="50" width="10" height="6" rx="1" fill="#0A0806"/><rect x="20" y="50" width="6" height="6" rx="1" fill="#0A0806"/><rect x="5" y="60" width="6" height="6" rx="1" fill="#0A0806"/>
+            <rect x="40" y="40" width="55" height="6" rx="1" fill="#C8883C"/>
+            <rect x="40" y="50" width="6" height="6" rx="1" fill="#0A0806"/><rect x="50" y="50" width="10" height="6" rx="1" fill="#0A0806"/><rect x="65" y="50" width="6" height="6" rx="1" fill="#0A0806"/><rect x="75" y="50" width="6" height="6" rx="1" fill="#0A0806"/>
+            <rect x="40" y="60" width="6" height="6" rx="1" fill="#0A0806"/><rect x="50" y="60" width="6" height="6" rx="1" fill="#0A0806"/><rect x="65" y="60" width="6" height="6" rx="1" fill="#0A0806"/>
+            <rect x="40" y="70" width="10" height="6" rx="1" fill="#0A0806"/><rect x="55" y="70" width="6" height="6" rx="1" fill="#0A0806"/><rect x="65" y="70" width="10" height="6" rx="1" fill="#0A0806"/>
+            <rect x="44" y="44" width="12" height="12" rx="2" fill="#C8883C"/>
+          </svg>
+        </div>
+        <div class="qr-lbl" data-zh>iOS 下载</div>
+        <div class="qr-lbl" data-en>iOS Download</div>
+        <div class="qr-sub">App Store</div>
+      </div>
+      <div class="qr-card reveal">
+        <div class="qr-box">
+          <svg width="82" height="82" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="28" height="28" rx="3" fill="#0A0806"/><rect x="9" y="9" width="20" height="20" rx="2" fill="white"/><rect x="13" y="13" width="12" height="12" rx="1" fill="#0A0806"/>
+            <rect x="67" y="5" width="28" height="28" rx="3" fill="#0A0806"/><rect x="71" y="9" width="20" height="20" rx="2" fill="white"/><rect x="75" y="13" width="12" height="12" rx="1" fill="#0A0806"/>
+            <rect x="5" y="67" width="28" height="28" rx="3" fill="#0A0806"/><rect x="9" y="71" width="20" height="20" rx="2" fill="white"/><rect x="13" y="75" width="12" height="12" rx="1" fill="#0A0806"/>
+            <rect x="40" y="5" width="10" height="6" rx="1" fill="#0A0806"/><rect x="55" y="5" width="6" height="6" rx="1" fill="#0A0806"/><rect x="45" y="15" width="6" height="6" rx="1" fill="#0A0806"/><rect x="55" y="25" width="6" height="6" rx="1" fill="#0A0806"/><rect x="40" y="25" width="10" height="6" rx="1" fill="#0A0806"/>
+            <rect x="5" y="40" width="10" height="6" rx="1" fill="#0A0806"/><rect x="20" y="40" width="6" height="6" rx="1" fill="#0A0806"/><rect x="10" y="50" width="6" height="6" rx="1" fill="#0A0806"/><rect x="20" y="50" width="6" height="6" rx="1" fill="#0A0806"/><rect x="5" y="60" width="10" height="6" rx="1" fill="#0A0806"/>
+            <rect x="40" y="40" width="6" height="55" rx="1" fill="#C8883C"/>
+            <rect x="50" y="40" width="6" height="6" rx="1" fill="#0A0806"/><rect x="60" y="40" width="10" height="6" rx="1" fill="#0A0806"/><rect x="75" y="40" width="6" height="6" rx="1" fill="#0A0806"/>
+            <rect x="50" y="50" width="10" height="6" rx="1" fill="#0A0806"/><rect x="65" y="50" width="10" height="6" rx="1" fill="#0A0806"/>
+            <rect x="50" y="60" width="6" height="6" rx="1" fill="#0A0806"/><rect x="60" y="60" width="6" height="6" rx="1" fill="#0A0806"/><rect x="75" y="60" width="6" height="6" rx="1" fill="#0A0806"/>
+            <rect x="44" y="44" width="12" height="12" rx="2" fill="#C8883C"/>
+          </svg>
+        </div>
+        <div class="qr-lbl" data-zh>Android 下载</div>
+        <div class="qr-lbl" data-en>Android Download</div>
+        <div class="qr-sub">Google Play / APK</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ─── CONTACT ─── -->
+<section class="contact" id="contact">
+  <div class="sec-label" data-zh>联系我们 / CONTACT</div>
+  <div class="sec-label" data-en>CONTACT US / 联系我们</div>
+  <h2 class="sec-title reveal" data-zh>与我们取得联系</h2>
+  <h2 class="sec-title reveal" data-en>Get In Touch</h2>
+  <p class="sec-sub reveal" data-zh>Get In Touch · We'd Love To Hear From You</p>
+  <p class="sec-sub reveal" data-en>期待与你的连接</p>
+
+  <p class="contact-desc reveal" data-zh>无论你是正在融资的创业者、寻找项目的投资人，还是有意向的合作伙伴，我们都欢迎与你交流。团队成员来自北京、新加坡，随时为你提供支持。</p>
+  <p class="contact-desc reveal" data-en>Whether you're a founder raising capital, an investor seeking deal flow, or a potential partner — we'd love to connect. Our team is based in Beijing and Singapore.</p>
+
+  <div class="contact-methods">
+    <a class="contact-item reveal" href="mailto:contact@yoluyoru.cn">
+      <div class="ci-icon">✉️</div>
+      <div>
+        <span class="ci-type">Email</span>
+        <span class="ci-val">contact@yoluyoru.cn</span>
+      </div>
+      <span class="ci-arrow">→</span>
+    </a>
+    <a class="contact-item reveal" href="#">
+      <div class="ci-icon">💬</div>
+      <div>
+        <span class="ci-type">WeChat <span data-zh>微信</span></span>
+        <span class="ci-val">yoluyoru_capital</span>
+      </div>
+      <span class="ci-arrow">→</span>
+    </a>
+    <a class="contact-item reveal" href="https://wa.me/yoluyoru" target="_blank">
+      <div class="ci-icon">📱</div>
+      <div>
+        <span class="ci-type">WhatsApp</span>
+        <span class="ci-val" data-zh>点击发起对话</span>
+        <span class="ci-val" data-en>Click to start chat</span>
+      </div>
+      <span class="ci-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="loc-card reveal">
+    <div class="loc-pin">📍</div>
+    <div class="loc-city" data-zh>北京 · 新加坡</div>
+    <div class="loc-city" data-en>Beijing · Singapore</div>
+    <div class="loc-name" data-zh>北京红松创业咨询管理有限公司</div>
+    <div class="loc-name" data-en>Beijing Hongsong Venture Consulting</div>
+    <div class="loc-url">yoluyoru.cn</div>
+  </div>
+
+  <div class="social-label" data-zh>关注我们</div>
+  <div class="social-label" data-en>Follow Us</div>
+  <div class="social-row reveal">
+    <a class="social-btn" href="#">📕 小红书</a>
+    <a class="social-btn" href="#">▶ 抖音</a>
+    <a class="social-btn" href="#">in LinkedIn</a>
+    <a class="social-btn" href="#">𝕏 Twitter/X</a>
+    <a class="social-btn" href="#">🎙 <span data-zh>小宇宙</span><span data-en>Xiaoyuzhou</span></a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-brand">
+    <strong>YOLUYORU 资本</strong>
+    <span data-zh> · 北京红松创业咨询管理有限公司</span>
+    <span data-en> · Beijing Hongsong Venture Consulting Management Co., Ltd</span>
+  </div>
+  <div class="footer-legal">
+    <span data-zh>© 2026 &nbsp;·&nbsp; 京ICP备XXXXXXXX号 &nbsp;·&nbsp; All Rights Reserved</span>
+    <span data-en>© 2026 &nbsp;·&nbsp; All Rights Reserved &nbsp;·&nbsp; yoluyoru.cn</span>
+  </div>
+</footer>
+
+<!-- ─── BACK TO TOP ─── -->
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="回到顶部">↑</button>
+
+<!-- ─── FLOATING CTA ─── -->
+<div class="float-cta" id="floatCta" style="display:none;">
+  <a href="#app" class="fcta-dl" data-zh>下载 App</a>
+  <a href="#app" class="fcta-dl" data-en>Download</a>
+  <a href="#contact" class="fcta-contact" data-zh>联系我们</a>
+  <a href="#contact" class="fcta-contact" data-en>Contact</a>
+</div>
+
+<script>
+// ── LANG ──
+function toggleLang(){
+  document.body.classList.toggle('en');
+  const isEn=document.body.classList.contains('en');
+  document.querySelector('.lang-btn').textContent=isEn?'EN/中':'中/EN';
+  document.title=isEn?'YOLUYORU Capital · AI-Powered Venture Ecosystem':'YOLUYORU 资本 · AI驱动的创投生态平台';
+}
+
+// ── MENU ──
+function toggleMenu(){
+  const btn=document.getElementById('menuBtn');
+  const d=document.getElementById('drawer');
+  btn.classList.toggle('open');
+  d.classList.toggle('open');
+  document.body.style.overflow=d.classList.contains('open')?'hidden':'';
+}
+function closeMenu(){
+  document.getElementById('menuBtn').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ── VALUES ACCORDION ──
+function toggleValue(el){
+  const isOpen=el.classList.contains('open');
+  document.querySelectorAll('.value-item').forEach(v=>v.classList.remove('open'));
+  if(!isOpen) el.classList.add('open');
+}
+
+// ── SCROLL REVEAL ──
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');}});
+},{threshold:0.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+// ── NAV + BTT + FLOAT CTA ──
+let lastY=0;
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY;
+  const nav=document.getElementById('nav');
+  const btt=document.getElementById('btt');
+  const fc=document.getElementById('floatCta');
+  // nav darken
+  nav.style.background=y>40?'rgba(10,8,6,0.97)':'rgba(10,8,6,0.88)';
+  // btt
+  y>400?btt.classList.add('show'):btt.classList.remove('show');
+  // float cta: show after hero
+  const heroH=document.querySelector('.hero').offsetHeight;
+  if(y>heroH){fc.style.display='flex';}else{fc.style.display='none';}
+  // hero parallax
+  document.getElementById('heroGrid').style.transform=`translateY(${y*0.25}px)`;
+  lastY=y;
+},{passive:true});
+</script>
+</body>
+</html>
